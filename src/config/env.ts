@@ -1,7 +1,10 @@
 import "dotenv/config";
 
 const env = {
-  clientHost: process.env.CLIENT as string,
+  clientHost:
+    process.env.NODE_ENV === "production"
+      ? (process.env.CLIENT as string)
+      : null,
   port: Number(process.env.PORT) ?? 3333,
   mongoUrl: process.env.MONGO_URL as string,
   openAiApiKey: process.env.OPENAI_API_KEY as string,

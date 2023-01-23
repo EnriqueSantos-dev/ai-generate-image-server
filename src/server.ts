@@ -9,7 +9,9 @@ import { dalleRoutes } from "./routes/dalle-routes";
 
 const app = express();
 
-app.use(cors({ origin: [env.clientHost] }));
+const corsOptions = env.clientHost ? { origin: env.clientHost } : {};
+
+app.use(cors(corsOptions));
 app.use(express.json({ limit: "50mb" }));
 
 //routes
