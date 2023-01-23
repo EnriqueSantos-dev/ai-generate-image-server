@@ -35,7 +35,6 @@ router.post("/generate", async (req, res) => {
     }
 
     if (err?.data?.response?.data?.error?.message) {
-      console.log(err?.data?.response?.data?.error?.message);
       return res
         .status(400)
         .json({ error: err.data.response.data.error.message });
