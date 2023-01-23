@@ -1,0 +1,25 @@
+version: "3.9"
+
+services:
+  app:
+    build: .
+    container_name: app
+    restart: always
+    ports:
+      - ${PORT}:3333
+    volumes:
+      - .:/app
+      - /app/node_modules
+    depends_on:
+      - mongo
+
+  mongo:
+    image: mongo
+    restart: always
+    container_name: mongo
+    env_file:
+      - .env
+    ports:
+      - 27017:27017
+    volumes:
+      - ./mongo:/data/db
