@@ -1,21 +1,34 @@
-FROM node:alpine
+FROM node:alpine AS dev
 
-RUN apk update && apk upgrade -q --no-cache
+RUN npm install -g pnpm
 
-WORKDIR /app
+WORKDIR /usr/src/app
 
 COPY package.json pnpm-lock.yaml ./
 
-RUN npm install -g pnpm && pnpm install --frozen-lockfile
+RUN pnpm install
 
 COPY . .
 
 RUN pnpm run build
 
+FROM node:alpine AS production
+
+RUN npm install -g pnpm
+
+WORKDIR /usr/src/app
+
+COPY package.json pnpm-lock.yaml ./
+
+RUN pnpm install --prod --frozen-lockfile
+
 COPY . .
 
-EXPOSE 3333
+COPY --from=dev /usr/src/app/dist ./dist
 
-ENV NODE_ENV=production
+ARG NODE_ENV=production
+ENV NODE_ENV=${NODE_ENV}
+
+EXPOSE 3333
 
 CMD [ "pnpm", "start" ]
